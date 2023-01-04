@@ -2,6 +2,9 @@ import { Box, Typography, Stack } from "@mui/material";
 import TitleField from "./TitleField";
 import DescriptionField from "./DescriptionField";
 import DatePickerField from "./DatePickerField";
+import DropdownField from "./DropdownField";
+import { Priority } from "./enums/Priority";
+import { Status } from "./enums/Status";
 
 const CreateNewTask = () => {
   return (
@@ -20,6 +23,40 @@ const CreateNewTask = () => {
         <TitleField />
         <DescriptionField />
         <DatePickerField />
+        <Stack direction={"row"} spacing={2}>
+          <DropdownField
+            label="Status"
+            defaultText="Select Task Status"
+            inputId="statusInput"
+            values={[
+              { value: Status.todo, label: Status.todo.toUpperCase() },
+              {
+                value: Status.inProgress,
+                label: Status.inProgress.toUpperCase(),
+              },
+              {
+                value: Status.completed,
+                label: Status.completed.toUpperCase(),
+              },
+            ]}
+          />
+          <DropdownField
+            label="Priority"
+            defaultText="Select Task Priority"
+            inputId="priorityInput"
+            values={[
+              { value: Priority.low, label: Priority.low.toUpperCase() },
+              {
+                value: Priority.normal,
+                label: Priority.normal.toUpperCase(),
+              },
+              {
+                value: Priority.high,
+                label: Priority.high.toUpperCase(),
+              },
+            ]}
+          />
+        </Stack>
       </Stack>
     </Box>
   );
