@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import { ReactElement } from "react";
-import CreateNewTask from "./CreateNewTask";
+import CreateNewTask from "./createTask/CreateNewTask";
 import Profile from "./Profile";
 
 const SideBar = (): ReactElement => {

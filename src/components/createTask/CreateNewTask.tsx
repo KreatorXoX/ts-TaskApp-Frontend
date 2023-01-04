@@ -1,5 +1,7 @@
-import React from "react";
-import { Box, TextField, Typography, Stack } from "@mui/material";
+import { Box, Typography, Stack } from "@mui/material";
+import TitleField from "./TitleField";
+import DescriptionField from "./DescriptionField";
+import DatePickerField from "./DatePickerField";
 
 const CreateNewTask = () => {
   return (
@@ -15,14 +17,9 @@ const CreateNewTask = () => {
         Create new Task
       </Typography>
       <Stack sx={{ width: "100%" }} spacing={2}>
-        <TextField id="title" label="Task Title" size="small" autoFocus />
-        <TextField
-          id="description"
-          label="Description"
-          multiline
-          minRows={3}
-          size="small"
-        />
+        <TitleField />
+        <DescriptionField />
+        <DatePickerField />
       </Stack>
     </Box>
   );
