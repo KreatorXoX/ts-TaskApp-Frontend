@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Grid, Stack } from "@mui/material";
 import { ReactElement } from "react";
 import CreateNewTask from "./createTask/CreateNewTask";
 import Profile from "./Profile";
@@ -22,8 +22,10 @@ const SideBar = (): ReactElement => {
         alignItems: "center",
       }}
     >
-      <Profile />
-      <CreateNewTask />
+      <Stack width={"100%"} maxWidth={"30rem"}>
+        <Profile />
+        <CreateNewTask />
+      </Stack>
     </Grid>
   );
 };

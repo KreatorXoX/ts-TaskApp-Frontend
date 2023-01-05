@@ -1,6 +1,6 @@
 import Grid from "@mui/material/Grid";
 import TaskArea from "../components/TaskArea";
-import SideBar from "../components/sidebar";
+import SideBar from "../components/SideBar";
 
 const Landing = () => {
   return (
