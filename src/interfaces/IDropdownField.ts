@@ -7,6 +7,7 @@ export type selectObject = {
 };
 export interface IDropdownField extends IDisabled {
   onChange?: (e: SelectChangeEvent) => void;
+  value?: string | undefined;
   values?: selectObject[];
   defaultText?: string;
   label?: string;

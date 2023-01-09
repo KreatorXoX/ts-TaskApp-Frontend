@@ -1,12 +1,11 @@
 import { TextField } from "@mui/material";
-import dayjs, { Dayjs } from "dayjs";
 import { LocalizationProvider, DesktopDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { IDateField } from "../../interfaces/IDateField";
 
 const DatePickerField = ({
-  value = dayjs(Date.now()),
-  onChange = (date: Dayjs | null) => console.log(date),
+  value = new Date(),
+  onChange = (date: Date | null) => console.log(date),
   disabled = false,
 }: IDateField) => {
   return (

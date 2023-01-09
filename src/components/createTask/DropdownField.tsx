@@ -1,8 +1,6 @@
-import { useState } from "react";
 import {
   InputLabel,
   MenuItem,
-  FormHelperText,
   FormControl,
   SelectChangeEvent,
   Select,
@@ -18,13 +16,10 @@ const DropdownField = ({
   defaultText = "default text",
   label = "test label",
   inputId = "testId",
-
+  value,
   disabled = false,
 }: IDropdownField) => {
-  const [selected, setSelected] = useState("");
-
   const handleSelectChange = (e: SelectChangeEvent) => {
-    setSelected(e.target.value);
     console.log(e.target.value);
   };
   return (
@@ -34,7 +29,7 @@ const DropdownField = ({
         labelId={`${label}-id`}
         id={`${inputId}-id`}
         name={inputId}
-        value={selected}
+        value={value}
         label={label}
         onChange={handleSelectChange}
         disabled={disabled}
