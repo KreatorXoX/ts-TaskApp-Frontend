@@ -7,36 +7,32 @@ import {
   Alert,
   AlertTitle,
 } from "@mui/material";
-import TitleField from "./TitleField";
-import DescriptionField from "./DescriptionField";
+
 import DatePickerField from "./DatePickerField";
-import DropdownField from "./DropdownField";
 import { Priority } from "./enums/Priority";
 import { Status } from "./enums/Status";
-import { useState } from "react";
-import { useCreateTask } from "../../api/taskRequests";
+import { FormEvent, useState } from "react";
 
-const CreateNewTask = () => {
-  const [title, setTitle] = useState<string | undefined>(undefined);
-  const [description, setDescription] = useState<string | undefined>(undefined);
+import { useForm } from "../../hooks/form-hook";
+import FormInputs from "../../shared/FormInput";
+import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../utils/validators";
+
+const CustomForm = () => {
   const [date, setDate] = useState<Date | null>(new Date());
-  const [status, setStatus] = useState<string>(Status.todo);
-  const [priority, setPriority] = useState<string>(Priority.normal);
 
-  const { mutate } = useCreateTask();
-  const submitTaskHandler = () => {
-    if (!title || !description) {
-      console.log("Title and Description is required fields");
-    }
-    mutate({
-      title: title!,
-      description: description!,
-      date: date!.toISOString(),
-      status,
-      priority,
-    });
-    // mutate({ title, description, date, status, priority });
-    console.log({ title, description, date, status, priority });
+  const { formState, inputHandler, dropdownHandler } = useForm(
+    {
+      title: { value: "", isValid: false },
+      description: { value: "", isValid: false },
+      status: { value: Status.todo, isValid: false },
+      priority: { value: Priority.normal, isValid: false },
+    },
+    false
+  );
+
+  const formHandler = (e: FormEvent) => {
+    e.preventDefault();
+    console.log(formState.inputs);
   };
   return (
     <Box
@@ -54,55 +50,92 @@ const CreateNewTask = () => {
         <AlertTitle>Success</AlertTitle>
         Your task is created succesfully
       </Alert>
-      <Stack sx={{ width: "100%" }} spacing={2}>
-        <TitleField onChange={(e) => setTitle(e.target.value)} />
-        <DescriptionField onChange={(e) => setDescription(e.target.value)} />
-        <DatePickerField value={date} onChange={(date) => setDate(date)} />
-        <Stack direction={"row"} spacing={2}>
-          <DropdownField
-            label="Status"
-            defaultText="Select Task Status"
-            inputId="statusInput"
-            value={status}
-            values={[
-              { value: Status.todo, label: Status.todo.toUpperCase() },
-              {
-                value: Status.inProgress,
-                label: Status.inProgress.toUpperCase(),
-              },
-              {
-                value: Status.completed,
-                label: Status.completed.toUpperCase(),
-              },
-            ]}
-            onChange={(e) => setStatus(e.target.value)}
+      <form style={{ width: "100%" }}>
+        <Stack sx={{ width: "100%" }} spacing={2}>
+          <FormInputs
+            type="text"
+            id="title"
+            name="title"
+            label="title"
+            value={formState.inputs.title.value}
+            onInputChange={inputHandler}
+            validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(3)]}
+            errorText="Field is required - Min 3 character"
           />
-          <DropdownField
-            label="Priority"
-            defaultText="Select Task Priority"
-            inputId="priorityInput"
-            value={priority}
-            values={[
-              { value: Priority.low, label: Priority.low.toUpperCase() },
-              {
-                value: Priority.normal,
-                label: Priority.normal.toUpperCase(),
-              },
-              {
-                value: Priority.high,
-                label: Priority.high.toUpperCase(),
-              },
-            ]}
-            onChange={(e) => setPriority(e.target.value)}
+          <FormInputs
+            type="textarea"
+            id="description"
+            name="description"
+            label="Description"
+            value={formState.inputs.title.value}
+            onInputChange={inputHandler}
+            validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(10)]}
+            errorText="Field is required - Min 10 character"
           />
+
+          <DatePickerField value={date} onChange={(date) => setDate(date)} />
+          <Stack direction={"row"} spacing={2}>
+            <FormInputs
+              type="select"
+              id="status"
+              name="status"
+              label="Status"
+              initialValue={formState.inputs.status.value}
+              initialValid={true}
+              onInputChange={dropdownHandler}
+              defaultText="Pick a Status"
+              values={[
+                { value: Status.todo, label: Status.todo.toUpperCase() },
+                {
+                  value: Status.inProgress,
+                  label: Status.inProgress.toUpperCase(),
+                },
+                {
+                  value: Status.completed,
+                  label: Status.completed.toUpperCase(),
+                },
+              ]}
+              errorText="Field is required"
+              validators={[VALIDATOR_REQUIRE()]}
+            />
+
+            <FormInputs
+              type="select"
+              id="priority"
+              name="priority"
+              label="Priority"
+              initialValue={formState.inputs.priority.value}
+              initialValid={true}
+              onInputChange={dropdownHandler}
+              defaultText="Pick a Priority"
+              values={[
+                { value: Priority.low, label: Priority.low.toUpperCase() },
+                {
+                  value: Priority.normal,
+                  label: Priority.normal.toUpperCase(),
+                },
+                {
+                  value: Priority.high,
+                  label: Priority.high.toUpperCase(),
+                },
+              ]}
+              errorText="Field is required"
+              validators={[VALIDATOR_REQUIRE()]}
+            />
+          </Stack>
+          <LinearProgress />
+          <Button
+            variant="contained"
+            disabled={!formState.isValid}
+            onClick={formHandler}
+            color="success"
+          >
+            Create Task
+          </Button>
         </Stack>
-        <LinearProgress />
-        <Button variant="contained" color="success" onClick={submitTaskHandler}>
-          Create Task
-        </Button>
-      </Stack>
+      </form>
     </Box>
   );
 };
 
-export default CreateNewTask;
+export default CustomForm;
