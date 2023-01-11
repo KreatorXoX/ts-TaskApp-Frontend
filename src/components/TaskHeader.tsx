@@ -3,7 +3,7 @@ import { ITaskHeader } from "../interfaces/ITaskHeader";
 import dayjs from "dayjs";
 
 const TaskHeader = ({
-  dateLabel = dayjs(Date.now()),
+  dateLabel = new Date(),
   title = "Test",
 }: ITaskHeader) => {
   return (
@@ -12,7 +12,10 @@ const TaskHeader = ({
         <Typography variant="h6">{title}</Typography>
       </Box>
       <Box>
-        <Chip variant="outlined" label={dateLabel.format("DD MMM, YYYY")} />
+        <Chip
+          variant="outlined"
+          label={dayjs(dateLabel).format("DD MMM, YYYY")}
+        />
       </Box>
     </Box>
   );

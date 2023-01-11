@@ -1,4 +1,4 @@
-import { Avatar, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import TaskBody from "./TaskBody";
 import TaskFooter from "./TaskFooter";
 import dayjs from "dayjs";
@@ -7,12 +7,11 @@ import TaskHeader from "./TaskHeader";
 import { ITask } from "../interfaces/ITask";
 import { Status } from "./createTask/enums/Status";
 import { Priority } from "./createTask/enums/Priority";
-import { width } from "@mui/system";
 import TaskPriority from "./TaskPriority";
 
 const TaskItem = ({
   title = "Test Title",
-  dateLabel = dayjs(Date.now()),
+  dateLabel = new Date(),
   description = "Test description body",
   priority = Priority.normal,
   status = Status.inProgress,

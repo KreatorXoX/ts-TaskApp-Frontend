@@ -17,8 +17,12 @@ import { useForm } from "../../hooks/form-hook";
 import FormInputs from "../../shared/FormInput";
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../utils/validators";
 
+import { useCreateTask } from "../../api/taskApi";
+
 const CustomForm = () => {
   const [date, setDate] = useState<Date | null>(new Date());
+
+  const createTask = useCreateTask();
 
   const { formState, inputHandler, dropdownHandler } = useForm(
     {
@@ -32,7 +36,14 @@ const CustomForm = () => {
 
   const formHandler = (e: FormEvent) => {
     e.preventDefault();
-    console.log(formState.inputs);
+
+    createTask.mutate({
+      title: formState.inputs.title.value,
+      description: formState.inputs.description.value,
+      status: formState.inputs.status.value,
+      priority: formState.inputs.priority.value,
+      date: date?.toISOString()!,
+    });
   };
   return (
     <Box
