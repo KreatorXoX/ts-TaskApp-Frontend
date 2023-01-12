@@ -11,7 +11,7 @@ import {
 import DatePickerField from "./DatePickerField";
 import { Priority } from "./enums/Priority";
 import { Status } from "./enums/Status";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 import { useForm } from "../../hooks/form-hook";
 import FormInputs from "../../shared/FormInput";
@@ -21,6 +21,7 @@ import { useCreateTask } from "../../api/taskApi";
 
 const CustomForm = () => {
   const [date, setDate] = useState<Date | null>(new Date());
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
 
   const createTask = useCreateTask();
 
@@ -28,6 +29,7 @@ const CustomForm = () => {
     {
       title: { value: "", isValid: false },
       description: { value: "", isValid: false },
+      pickedDate: { value: new Date().toISOString(), isValid: true },
       status: { value: Status.todo, isValid: false },
       priority: { value: Priority.normal, isValid: false },
     },
@@ -37,7 +39,7 @@ const CustomForm = () => {
   const formHandler = (e: FormEvent) => {
     e.preventDefault();
 
-    createTask.mutate({
+    createTask.mutateAsync({
       title: formState.inputs.title.value,
       description: formState.inputs.description.value,
       status: formState.inputs.status.value,
@@ -45,6 +47,21 @@ const CustomForm = () => {
       date: date?.toISOString()!,
     });
   };
+
+  useEffect(() => {
+    if (createTask.isSuccess) {
+      setShowSuccess(true);
+    }
+
+    const timeOut = setTimeout(() => {
+      setShowSuccess(false);
+    }, 4 * 1000);
+
+    return () => {
+      clearTimeout(timeOut);
+    };
+  }, [createTask.isSuccess]);
+
   return (
     <Box
       display={"flex"}
@@ -57,10 +74,16 @@ const CustomForm = () => {
       <Typography variant="h6" component={"h2"} mb={2}>
         Create new Task
       </Typography>
-      <Alert severity="success" sx={{ width: "100%", marginBottom: "1.2rem" }}>
-        <AlertTitle>Success</AlertTitle>
-        Your task is created succesfully
-      </Alert>
+
+      {showSuccess && (
+        <Alert
+          severity="success"
+          sx={{ width: "100%", marginBottom: "1.2rem" }}
+        >
+          <AlertTitle>Success</AlertTitle>
+          Your task is created succesfully
+        </Alert>
+      )}
       <form style={{ width: "100%" }}>
         <Stack sx={{ width: "100%" }} spacing={2}>
           <FormInputs
@@ -72,6 +95,7 @@ const CustomForm = () => {
             onInputChange={inputHandler}
             validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(3)]}
             errorText="Field is required - Min 3 character"
+            disabled={createTask.isLoading}
           />
           <FormInputs
             type="textarea"
@@ -82,9 +106,14 @@ const CustomForm = () => {
             onInputChange={inputHandler}
             validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(10)]}
             errorText="Field is required - Min 10 character"
+            disabled={createTask.isLoading}
           />
 
-          <DatePickerField value={date} onChange={(date) => setDate(date)} />
+          <DatePickerField
+            value={date}
+            onChange={(date) => setDate(date)}
+            disabled={createTask.isLoading}
+          />
           <Stack direction={"row"} spacing={2}>
             <FormInputs
               type="select"
@@ -108,6 +137,7 @@ const CustomForm = () => {
               ]}
               errorText="Field is required"
               validators={[VALIDATOR_REQUIRE()]}
+              disabled={createTask.isLoading}
             />
 
             <FormInputs
@@ -132,12 +162,13 @@ const CustomForm = () => {
               ]}
               errorText="Field is required"
               validators={[VALIDATOR_REQUIRE()]}
+              disabled={createTask.isLoading}
             />
           </Stack>
-          <LinearProgress />
+          {createTask.isLoading && <LinearProgress />}
           <Button
             variant="contained"
-            disabled={!formState.isValid}
+            disabled={!formState.isValid || createTask.isLoading}
             onClick={formHandler}
             color="success"
           >

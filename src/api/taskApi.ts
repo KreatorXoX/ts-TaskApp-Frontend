@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ICreateTask } from "../interfaces/ICreateTask";
 import axios from "axios";
+import { queryClient } from "../App";
 
 const axiosClient = axios.create({
   baseURL: "http://localhost:5000/api/tasks",
@@ -13,11 +14,15 @@ const getTasks = async (): Promise<ICreateTask[]> => {
 export const useGetTasks = () =>
   useQuery({ queryKey: ["tasks"], queryFn: getTasks });
 
-const createTask = async (data: ICreateTask): Promise<void> => {
-  const response = await axiosClient.post("/", data);
+const createTask = async (data: ICreateTask): Promise<ICreateTask> => {
+  const response = await axiosClient.post<ICreateTask>("/", data);
   return response.data;
 };
-export const useCreateTask = () =>
-  useMutation({
+export const useCreateTask = () => {
+  return useMutation({
     mutationFn: (data: ICreateTask) => createTask(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["tasks"]);
+    },
   });
+};

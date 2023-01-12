@@ -1,5 +1,5 @@
 import { PriorityLabel } from "./ITask";
 
 export interface ITaskPriority {
-  priority?: PriorityLabel;
+  priority?: PriorityLabel | string;
 }
