@@ -1,15 +1,33 @@
-import { Box, Chip, Typography } from "@mui/material";
+import { Box, Chip, Typography, IconButton } from "@mui/material";
+import { Delete } from "@mui/icons-material";
 import { ITaskHeader } from "../interfaces/ITaskHeader";
+import { useDeleteTask } from "../api/taskApi";
 import dayjs from "dayjs";
 
 const TaskHeader = ({
   dateLabel = new Date(),
   title = "Test",
+  id,
 }: ITaskHeader) => {
+  const { mutate: deleteTask } = useDeleteTask();
+  const deleteTaskHandler = (id: string) => {
+    deleteTask({ id });
+  };
   return (
-    <Box display="flex" width="100%" justifyContent="space-between" mb={3}>
+    <Box
+      display="flex"
+      width="100%"
+      justifyContent="space-between"
+      alignItems="center"
+      mb={3}
+    >
       <Box>
         <Typography variant="h6">{title}</Typography>
+      </Box>
+      <Box>
+        <IconButton onClick={deleteTaskHandler.bind(null, id)}>
+          <Delete fontSize="small" color="error" />
+        </IconButton>
       </Box>
       <Box>
         <Chip

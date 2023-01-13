@@ -1,5 +1,5 @@
-import { PriorityLabel } from "./ITask";
+import { Priority } from "../components/createTask/enums/Priority";
 
 export interface ITaskPriority {
-  priority?: PriorityLabel | string;
+  priority?: `${Priority}`;
 }

@@ -1,23 +1,23 @@
 import { Box } from "@mui/material";
 import TaskBody from "./TaskBody";
 import TaskFooter from "./TaskFooter";
-import dayjs from "dayjs";
 import { getBorderColor } from "../utils/getColor";
 import TaskHeader from "./TaskHeader";
-import { ITask } from "../interfaces/ITask";
+import { ITaskItem } from "../interfaces/ITaskItem";
 import { Status } from "./createTask/enums/Status";
 import { Priority } from "./createTask/enums/Priority";
 import TaskPriority from "./TaskPriority";
 
 const TaskItem = ({
+  id,
   title = "Test Title",
   dateLabel = new Date(),
   description = "Test description body",
   priority = Priority.normal,
   status = Status.inProgress,
   onClick = (e) => console.log(e),
-  onStatusChange = (e) => console.log(e),
-}: ITask) => {
+  onStatusChange = (e) => console.log(e.target.id, e.target.checked),
+}: ITaskItem) => {
   return (
     <Box
       p={2}
@@ -34,10 +34,12 @@ const TaskItem = ({
       }}
     >
       <TaskPriority priority={priority} />
-      <TaskHeader title={title} dateLabel={dateLabel} />
+      <TaskHeader id={id} title={title} dateLabel={dateLabel} />
       <TaskBody description={description} />
       <TaskFooter
-        checked={status === Status.completed}
+        id={id}
+        status={status}
+        checked={status === Status.completed || status === Status.inProgress}
         onClick={onClick}
         onStatusChange={onStatusChange}
       />
