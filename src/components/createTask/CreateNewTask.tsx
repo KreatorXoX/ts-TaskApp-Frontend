@@ -1,3 +1,4 @@
+import { FormEvent, useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -11,7 +12,6 @@ import {
 import DatePickerField from "./DatePickerField";
 import { Priority } from "./enums/Priority";
 import { Status } from "./enums/Status";
-import { FormEvent, useEffect, useState } from "react";
 
 import { useForm } from "../../hooks/form-hook";
 import FormInputs from "../../shared/FormInput";
@@ -30,16 +30,16 @@ const CustomForm = () => {
       title: { value: "", isValid: false },
       description: { value: "", isValid: false },
       pickedDate: { value: new Date().toISOString(), isValid: true },
-      status: { value: Status.todo, isValid: false },
-      priority: { value: Priority.normal, isValid: false },
+      status: { value: Status.todo, isValid: true },
+      priority: { value: Priority.normal, isValid: true },
     },
     false
   );
 
-  const formHandler = (e: FormEvent) => {
+  const formHandler = async (e: FormEvent) => {
     e.preventDefault();
 
-    createTask.mutateAsync({
+    await createTask.mutateAsync({
       title: formState.inputs.title.value,
       description: formState.inputs.description.value,
       status: formState.inputs.status.value,

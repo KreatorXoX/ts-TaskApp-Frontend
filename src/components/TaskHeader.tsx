@@ -24,16 +24,18 @@ const TaskHeader = ({
       <Box>
         <Typography variant="h6">{title}</Typography>
       </Box>
-      <Box>
-        <IconButton onClick={deleteTaskHandler.bind(null, id)}>
-          <Delete fontSize="small" color="error" />
-        </IconButton>
-      </Box>
-      <Box>
-        <Chip
-          variant="outlined"
-          label={dayjs(dateLabel).format("DD MMM, YYYY")}
-        />
+      <Box display={"flex"} gap="0.1rem">
+        <Box>
+          <Chip
+            variant="outlined"
+            label={dayjs(dateLabel).format("DD MMM, YYYY")}
+          />
+        </Box>
+        <Box>
+          <IconButton onClick={deleteTaskHandler.bind(null, id)}>
+            <Delete fontSize="small" color="error" />
+          </IconButton>
+        </Box>
       </Box>
     </Box>
   );
